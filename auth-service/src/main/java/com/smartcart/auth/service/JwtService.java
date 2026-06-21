@@ -13,8 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 
-import static com.smartcart.auth.enums.RoleName.*;
-
 @Service
 public class JwtService {
 

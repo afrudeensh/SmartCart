@@ -1,14 +1,12 @@
 package com.smartcart.auth.controller;
 
-import com.smartcart.auth.dto.request.ChangeRoleRequest;
-import com.smartcart.auth.dto.request.LoginRequest;
-import com.smartcart.auth.dto.request.RefreshRequest;
-import com.smartcart.auth.dto.request.RegisterRequest;
+import com.smartcart.auth.dto.request.*;
 import com.smartcart.auth.dto.response.AuthResponse;
 import com.smartcart.auth.dto.response.BaseResponse;
 import com.smartcart.auth.dto.response.UserProfileResponse;
 import com.smartcart.auth.entity.Users;
 import com.smartcart.auth.service.AuthService;
+import com.smartcart.auth.service.PasswordResetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,6 +24,8 @@ import java.util.List;
 public class AuthController {
 
     private final AuthService authService;
+
+    private final PasswordResetService passwordResetService;
 
     // ── Public endpoints ──────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ public class AuthController {
         return BaseResponse.success(authService.getAllUsers());
     }
 
-    @PutMapping("/admin/users/{id}/role")
+    @PostMapping("/admin/users/{id}/role")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BaseResponse<UserProfileResponse> changeRole(
             @PathVariable Long id,
@@ -92,5 +92,19 @@ public class AuthController {
                 authService.changeRole(id, request),
                 "Role updated successfully"
         );
+    }
+
+    @PostMapping("/forgot-password")
+    public BaseResponse<Void> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.sendResetEmail(request.getEmail());
+        return BaseResponse.success(null, "If that email is registered, a reset link has been sent");
+    }
+
+    @PostMapping("/reset-password")
+    public BaseResponse<Void> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.getToken(), request.getNewPassword());
+        return BaseResponse.success(null, "Password reset successfully. Please log in.");
     }
 }

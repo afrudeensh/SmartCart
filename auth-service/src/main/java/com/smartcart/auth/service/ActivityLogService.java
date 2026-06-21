@@ -18,16 +18,6 @@ public class ActivityLogService {
 
     private final UserActivityLogRepository logRepository;
     private final ObjectMapper              objectMapper;
-
-    // ── Action constants ──────────────────────────────────────────────────────
-    public static final String ACTION_REGISTER              = "REGISTER";
-    public static final String ACTION_LOGIN                 = "LOGIN";
-    public static final String ACTION_LOGOUT                = "LOGOUT";
-    public static final String ACTION_TOKEN_REFRESHED       = "TOKEN_REFRESHED";
-    public static final String ACTION_PASSWORD_RESET_REQUEST= "PASSWORD_RESET_REQUEST";
-    public static final String ACTION_PASSWORD_RESET_SUCCESS= "PASSWORD_RESET_SUCCESS";
-    public static final String ACTION_ROLE_CHANGED          = "ROLE_CHANGED";
-
     /**
      * @Async — fire-and-forget: never blocks the main request thread.
      * Failures are logged but never thrown back to the caller.
